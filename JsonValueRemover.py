@@ -1,30 +1,24 @@
+import os
 import json
 import sys
-import os
 
-# Check if the command line argument is provided correctly
-if len(sys.argv) != 2:
-    print("Please provide the path to the configuration file ending with .json as a command line argument")
-    sys.exit(1)
+# Get the path and name of the old JSON file
+old_file_path = os.path.abspath(sys.argv[1])
+old_file_name = os.path.basename(old_file_path)
 
-# Get the path to the configuration file from the command line argument
-config_path = sys.argv[1]
-
-# Check if the configuration file exists
-if not os.path.isfile(config_path):
-    print("Configuration file does not exist")
-    sys.exit(1)
-
-# Check if the configuration file has the .json extension
-if not config_path.endswith(".json"):
-    print("Please provide the path to the configuration file ending with .json")
-    sys.exit(1)
+# Parse the command-line arguments to get the new file name (if provided)
+if len(sys.argv) > 2:
+    new_file_path = os.path.abspath(sys.argv[2])
+else:
+    # Construct the default new file name
+    new_file_name = f"{os.path.splitext(old_file_name)[0]}_valueless.json"
+    new_file_path = os.path.join(os.path.dirname(old_file_path), new_file_name)
 
 # Read the configuration file
-with open(config_path, encoding='utf-8') as config_file:
+with open(old_file_path) as config_file:
     config = json.load(config_file)
 
-# Recursively set all values to an empty string
+# Recursively remove all values and set them to an empty string
 def remove_values(data):
     if isinstance(data, dict):
         return {key: remove_values(value) for key, value in data.items()}
@@ -33,16 +27,11 @@ def remove_values(data):
     else:
         return ""
 
-# Set values in the configuration file to an empty string
-new_config = remove_values(config)
+# Set the values in the configuration file to an empty string
+config = remove_values(config)
 
-# Construct the new file name
-dirname, basename = os.path.split(config_path)
-filename, ext = os.path.splitext(basename)
-new_filename = os.path.join(dirname, f"{filename}_rmvalue{ext}")
+# Write the updated configuration to the new file
+with open(new_file_path, "w") as new_file:
+    json.dump(config, new_file, indent=4)
 
-# Write the updated configuration to a new JSON file
-with open(new_filename, "w", encoding='utf-8') as new_config_file:
-    json.dump(new_config, new_config_file, indent=4, ensure_ascii=False)
-
-print(f"Generated new JSON file: {new_filename}")
+print(f"New JSON file '{new_file_path}' has been generated successfully.")
