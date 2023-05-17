@@ -2,29 +2,29 @@ import json
 import sys
 import os
 
-# 检查命令行参数是否正确
+# Check if the command line argument is provided correctly
 if len(sys.argv) != 2:
-    print("请提供以 .json 结尾的配置文件的路径作为命令行参数")
+    print("Please provide the path to the configuration file ending with .json as a command line argument")
     sys.exit(1)
 
-# 获取命令行参数中的配置文件路径
+# Get the path to the configuration file from the command line argument
 config_path = sys.argv[1]
 
-# 检查配置文件是否存在
+# Check if the configuration file exists
 if not os.path.isfile(config_path):
-    print("配置文件不存在")
+    print("Configuration file does not exist")
     sys.exit(1)
 
-# 检查配置文件的扩展名是否为 .json
+# Check if the configuration file has the .json extension
 if not config_path.endswith(".json"):
-    print("请提供以 .json 结尾的配置文件的路径")
+    print("Please provide the path to the configuration file ending with .json")
     sys.exit(1)
 
-# 读取配置文件
+# Read the configuration file
 with open(config_path, encoding='utf-8') as config_file:
     config = json.load(config_file)
 
-# 递归将所有值设置为空字符串
+# Recursively set all values to an empty string
 def remove_values(data):
     if isinstance(data, dict):
         return {key: remove_values(value) for key, value in data.items()}
@@ -33,16 +33,16 @@ def remove_values(data):
     else:
         return ""
 
-# 将配置文件中的值设置为空字符串
+# Set values in the configuration file to an empty string
 new_config = remove_values(config)
 
-# 构造新的文件名
+# Construct the new file name
 dirname, basename = os.path.split(config_path)
 filename, ext = os.path.splitext(basename)
 new_filename = os.path.join(dirname, f"{filename}_rmvalue{ext}")
 
-# 将更新后的配置写入新的 JSON 文件
+# Write the updated configuration to a new JSON file
 with open(new_filename, "w", encoding='utf-8') as new_config_file:
     json.dump(new_config, new_config_file, indent=4, ensure_ascii=False)
 
-print(f"已生成新的 JSON 文件：{new_filename}")
+print(f"Generated new JSON file: {new_filename}")
