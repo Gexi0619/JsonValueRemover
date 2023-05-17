@@ -11,17 +11,14 @@ The JSON Value Remover is a lightweight command-line tool developed in Python to
    git clone https://github.com/Gexi0619/JsonValueRemover.git
    ```
 
-
 ## Usage
 Run the script using the following command:
-
 ```
 python remove_values.py <input_file_path> [output_file_path]
 ```
 
-
 - `<input_file_path>`: Required. The path to the input JSON file that you want to process.
-- `[output_file_path]`: Optional. The path to the output JSON file. If not provided, the default name `<input_file_name>_valueless.json` will be generated.
+- `[output_file_path]`: Optional. The path to the output JSON file. If not provided, the output file will be generated with the name `<input_file_name>_valueless.json` at the same location as the input file.
 
 ## License
 This script is licensed under the [MIT License](https://opensource.org/licenses/MIT). 
