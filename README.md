@@ -14,7 +14,7 @@ The JSON Value Remover is a lightweight command-line tool developed in Python to
 ## Usage
 Run the script using the following command:
 ```
-python remove_values.py <input_file_path> [output_file_path]
+python JsonValueRemover.py <input_file_path> [output_file_path]
 ```
 
 - `<input_file_path>`: Required. The path to the input JSON file that you want to process.
